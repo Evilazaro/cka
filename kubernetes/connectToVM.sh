@@ -5,18 +5,11 @@ logMessage() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
 }
 
-# Check if Resource Group Name, VM Name, and Subscription ID are provided as parameters
-if [ -z "$1" ] || [ -z "$2" ] ; then
-    logMessage "Error: ResourceGroupName, and VmName parameters are required."
-    logMessage "Usage: $0 <ResourceGroupName> <VmName>"
-    exit 1
-fi
-
 # Assign parameters to variables
-resourceGroupName="$1"
-vmName="$2"
-keyName="$3"
-k8sAdminName="$4"
+resourceGroupName="eShop-cKa-rg"
+vmName="kube-master-0"
+keyName="eshop-cka.key"
+k8sAdminName="k8sadmin"
 
 # Get the current Azure Subscription ID
 logMessage "Retrieving the current Azure Subscription ID"

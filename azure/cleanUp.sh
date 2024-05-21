@@ -27,6 +27,7 @@ for resourceGroupName in "${resourceGroupNames[@]}"; do
 done
 
 # Remove all files in the current directory
+rm -f ./*.key ./*.pub
 cd ~
 find . -maxdepth 1 -type f -exec rm -f {} \;
 
