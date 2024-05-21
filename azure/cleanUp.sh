@@ -16,7 +16,6 @@ logMessage "Starting the Azure environment cleanup script with the following set
 # Check if deleteResourceGroup.sh script is available
 if [ ! -f deleteResourceGroup.sh ]; then
     logMessage "Error: deleteResourceGroup.sh script not found."
-    exit 1
 fi
 
 # Loop through each resource group name and execute the deleteResourceGroup.sh script
@@ -24,8 +23,11 @@ for resourceGroupName in "${resourceGroupNames[@]}"; do
     ./deleteResourceGroup.sh "$resourceGroupName"
     if [ $? -ne 0 ]; then
         logMessage "Error: Failed to execute deleteResourceGroup.sh script for Resource Group: $resourceGroupName"
-        exit 1
     fi
 done
+
+# Remove all files in the current directory
+cd ~
+find . -maxdepth 1 -type f -exec rm -f {} \;
 
 logMessage "Azure environment cleanup completed successfully for all specified resource groups!"

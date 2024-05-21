@@ -19,6 +19,8 @@ keyName="$1"
 logMessage "Starting the SSH key generation script with the following settings:"
 logMessage "Key Name: $keyName"
 
+rm -f ~/$keyName
+
 # Generate SSH key pair
 logMessage "Generating SSH key pair..."
 ssh-keygen -t rsa -b 2048 -f "$keyName" -N ''

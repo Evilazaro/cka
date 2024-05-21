@@ -78,6 +78,8 @@ checkError
 ./vms/createVms.sh $resourceGroupName $azureRegion $vnetName $keyName $nsgName $subnetName $masterNodeName $workerNodeName
 checkError
 
+#./Kubernetes/createKubernetesCluster.sh $resourceGroupName $masterNodeName $keyName $k8sAdminName $workerNodeName
+
 logMessage "************************************************************************************************"
 logMessage "|                                     I told you!                                               |"
 logMessage "|                       Deployment script completed successfully!                               |"
