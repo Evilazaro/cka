@@ -1,16 +1,12 @@
 FROM ubuntu:20.04
+EXPOSE 6443 80 443 8080 
 WORKDIR /src
 
 COPY . .
 
 RUN apt-get update && \
-    apt-get upgrade -y 
-    
-RUN apt-get install -y && \ 
-    apt-get install -y sudo && \
-    apt-get install -y curl && \
-    apt-get install -y gpg && \
-    apt-get install -y systemctl
+    apt-get upgrade -y && \
+    apt-get install -y sudo
 
 RUN find /src -exec chmod +x {} \;
 RUN sudo /bin/bash -c "/src/kubernetes/createKubernetesCluster.sh true"

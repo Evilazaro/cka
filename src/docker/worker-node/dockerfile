@@ -1,6 +1,12 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 WORKDIR /src
 
-COPY . .
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y sudo
+    
+# Add an entrypoint script (if needed) to initialize your container
+COPY /docker/worker-node/entryPoint.sh /usr/local/bin/entryPoint.sh
+RUN chmod +x /usr/local/bin/entryPoint.sh
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/usr/local/bin/entryPoint.sh"]
