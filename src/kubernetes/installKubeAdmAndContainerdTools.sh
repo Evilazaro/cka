@@ -43,7 +43,7 @@ log_message "Updating package index again and upgrading packages..."
 sudo apt-get update && sudo apt-get upgrade -y
 
 log_message "Installing containerd, kubelet, kubeadm, and kubectl..."
-sudo apt-get install -y containerd.io kubeadm kubelet kubectl
+sudo apt-get install -y containerd kubeadm kubelet kubectl
 
 log_message "Configuring prerequisites for container runtime..."
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -77,16 +77,16 @@ log_message "Enabling containerd to start on boot..."
 sudo systemctl enable containerd
 
 log_message "Initializing Kubernetes cluster..."
-sudo kubeadm init --control-plane-endpoint "$masterNodeName.kube.cloudapp.azure.com:6443" --upload-certs 
+sudo kubeadm init --control-plane-endpoint "$masterNodeName.cloudapp.azure.com:6443" --upload-certs 
 
 # Uncomment the following lines to configure kubectl for the current user
-# log_message "Configuring kubectl for current user..."
-# mkdir -p $HOME/.kube
-# sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-# sudo chown $(id -u):$(id -g) $HOME/.kube/config
+log_message "Configuring kubectl for current user..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # Uncomment the following line to install a CNI plugin (e.g., Weave Net)
-# log_message "Installing Weave Net CNI plugin..."
-# kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+log_message "Installing Weave Net CNI plugin..."
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 
 log_message "Containerd installation and Kubernetes cluster initialization completed successfully!"
