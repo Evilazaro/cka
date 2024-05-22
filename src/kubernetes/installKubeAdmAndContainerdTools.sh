@@ -31,17 +31,19 @@ masterNodeName="$1"
 log_message "Updating package index and upgrading packages..."
 sudo apt-get update && sudo apt-get upgrade -y
 
+sudo mkdir -p /etc/apt/keyrings
+
 log_message "Adding Docker’s official GPG key..."
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 log_message "Setting up the Docker stable repository..."
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 log_message "Updating package index again and upgrading packages..."
 sudo apt-get update && sudo apt-get upgrade -y
 
 log_message "Installing containerd, kubelet, kubeadm, and kubectl..."
-sudo apt-get install -y containerd.io kubelet kubeadm kubectl
+sudo apt-get install -y containerd.io kubeadm kubelet kubectl
 
 log_message "Configuring prerequisites for container runtime..."
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf

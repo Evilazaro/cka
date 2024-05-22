@@ -39,7 +39,7 @@ azureSubscriptionName="$1"
 
 logMessage "************************************************************************************************"
 logMessage "|                        Welcome to the eShop CKA Deployment Script!                            |"
-logMessage "|             Please have a sit! We are going to take care of everything for you                |"
+logMessage "|     Please take a sit, and have fun! We are going to take care of everything for you          |"
 logMessage "************************************************************************************************"
 
 
@@ -75,6 +75,6 @@ checkError
 checkError
 
 logMessage "************************************************************************************************"
-logMessage "|                                     I told you!                                               |"
+logMessage "|                  I told you! We've taken care of everything for you.                          |"
 logMessage "|                       Deployment script completed successfully!                               |"
 logMessage "************************************************************************************************"
