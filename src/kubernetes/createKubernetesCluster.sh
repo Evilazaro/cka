@@ -42,7 +42,7 @@ logMessage "Starting the Azure VM login script with the following settings:"
 logMessage "Resource Group Name: $resourceGroupName"
 logMessage "VM Name: $masterNodeName"
 
-sudo ././kubernetes/installKubeAdmAndContainerdTools.sh $masterNodeName
+sudo ./installKubeAdmAndContainerdTools.sh $masterNodeName
 checkError
 
 logMessage "************************************************************************************************"
