@@ -1,0 +1,16 @@
+version: '3'
+services:
+  eshop-k8s-master:
+    image: ${REGISTRY:-eshop}/eshop-k8s-master:latest
+    build:
+      context: .
+      dockerfile: ./docker/master-node/Dockerfile
+
+  # eshop-k8s-worker:
+  #   image: ${REGISTRY:-eshop}/eshop-k8s-worker:latest
+  #   build:
+  #     context: .
+  #     dockerfile: ./worker-node/Dockerfile
+  #   depends_on:
+  #     - eshop-k8s-master
+    

@@ -1,0 +1,6 @@
+FROM ubuntu:latest
+WORKDIR /src
+
+COPY . .
+
+CMD ["/bin/bash"]
