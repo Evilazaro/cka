@@ -5,12 +5,12 @@ logMessage() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
 }
 
-# # Check if all necessary parameters are provided
-# if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ]; then
-#     logMessage "Error: ResourceGroupName, AzureRegion, VnetName, KeyName, NsgName, and subnetName parameters are required."
-#     logMessage "Usage: $0 <ResourceGroupName> <AzureRegion> <VnetName> <KeyName> <NsgName> <subnetName>"
-#     exit 1
-# fi
+# Check if all necessary parameters are provided
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ]; then
+    logMessage "Error: ResourceGroupName, AzureRegion, VnetName, KeyName, NsgName, Subnet Name, Master Node Name, and Worker Node Name parameters are required."
+    logMessage "Usage: $0 <ResourceGroupName> <AzureRegion> <VnetName> <KeyName> <NsgName> <subnetName> <MasterNodeName> <WorkerNodeName>"
+    exit 1
+fi
 
 # Assign parameters to variables
 resourceGroupName="$1"

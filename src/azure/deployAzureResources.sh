@@ -20,8 +20,6 @@ checkError() {
         logMessage "|                              Something went wrong!                                           |"
         logMessage "************************************************************************************************"
         exit 1
-    else
-        clear
     fi
 }
 
@@ -59,7 +57,7 @@ logMessage "Azure Subscription Name: $azureSubscriptionName"
 logMessage "Deployment script initialized successfully!"
 
 # Log in to Azure
-./login.sh $azureSubscriptionName
+./security/login.sh $azureSubscriptionName
 
 # Create Resource Group
 logMessage "Creating Resource Group: $resourceGroupName in $azureRegion"
@@ -82,4 +80,3 @@ logMessage "********************************************************************
 logMessage "|                                     I told you!                                               |"
 logMessage "|                       Deployment script completed successfully!                               |"
 logMessage "************************************************************************************************"
-

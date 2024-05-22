@@ -7,8 +7,6 @@ checkError() {
         logMessage "|                              Something went wrong!                                           |"
         logMessage "************************************************************************************************"
         exit 1
-    else
-        clear
     fi
 }
 

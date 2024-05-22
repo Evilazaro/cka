@@ -6,9 +6,9 @@ logMessage() {
 }
 
 # Check if Resource Group Name and Azure Region are provided as parameters
-if [ -z "$1" ] || [ -z "$2" ]; then
-    logMessage "Error: Both ResourceGroupName and AzureRegion parameters are required."
-    logMessage "Usage: $0 <ResourceGroupName> <AzureRegion>"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ]; then
+    logMessage "Error: The ResourceGroupName, AzureRegion, Vnet Name, Subnet Name, and NSG Name parameters are required."
+    logMessage "Usage: $0 <ResourceGroupName> <AzureRegion> <VnetName> <SubnetName> <NSGName>"
     exit 1
 fi
 

@@ -28,8 +28,7 @@ trap handle_error ERR
 
 # Check if Azure CLI is installed
 echo "Checking if Azure CLI is installed..."
-if ! command -v az &> /dev/null
-then
+if ! command -v az &>/dev/null; then
     echo "Azure CLI not found. Please install it from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli and try again."
     exit 1
 fi
