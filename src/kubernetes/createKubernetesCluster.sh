@@ -31,9 +31,7 @@ logMessage "********************************************************************
 logMessage "|                     Let's prepare and deploy your Kubernetes Cluster!                         |"
 logMessage "|             Please have a sit! We are going to take care of everything for you                |"
 logMessage "************************************************************************************************"
-logMessage ""
-logMessage ""
-logMessage ""
+
 
 # Log the start of the script
 logMessage "Starting the Azure VM login script with the following settings:"

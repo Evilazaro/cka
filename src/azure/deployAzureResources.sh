@@ -41,9 +41,7 @@ logMessage "********************************************************************
 logMessage "|                        Welcome to the eShop CKA Deployment Script!                            |"
 logMessage "|             Please have a sit! We are going to take care of everything for you                |"
 logMessage "************************************************************************************************"
-logMessage ""
-logMessage ""
-logMessage ""
+
 
 # Log the start of the script
 logMessage "Starting the deployment script with the following settings:"
