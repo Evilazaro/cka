@@ -1,14 +1,22 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 WORKDIR /src
 
 COPY . .
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y sudo
+    apt-get upgrade -y 
+    
+RUN apt-get install -y && \ 
+    apt-get install -y sudo && \
+    apt-get install -y curl && \
+    apt-get install -y gpg && \
+    apt-get install -y systemctl
 
 RUN find /src -exec chmod +x {} \;
-RUN ls /src
-RUN sudo /bin/bash -c "/src/kubernetes/createKubernetesCluster.sh"
+RUN sudo /bin/bash -c "/src/kubernetes/createKubernetesCluster.sh true"
 
-CMD ["kubeadm init"]
+# Add an entrypoint script (if needed) to initialize your container
+COPY /docker/master-node/entryPoint.sh /usr/local/bin/entryPoint.sh
+RUN chmod +x /usr/local/bin/entryPoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entryPoint.sh"]

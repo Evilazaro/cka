@@ -26,6 +26,7 @@ nsgName="eshop-cka-nsg"
 masterNodeName="kube-master-0"
 workerNodeName="kube-worker-node-0"
 k8sAdminName="k8sadmin"
+docker="$1"
 
 logMessage "************************************************************************************************"
 logMessage "|                     Let's prepare and deploy your Kubernetes Cluster!                         |"
@@ -38,7 +39,7 @@ logMessage "Starting the Azure VM login script with the following settings:"
 logMessage "Resource Group Name: $resourceGroupName"
 logMessage "VM Name: $masterNodeName"
 
-sudo ./installKubeAdmAndContainerdTools.sh $masterNodeName
+sudo /src/kubernetes/installKubeAdmAndContainerdTools.sh $masterNodeName $docker
 checkError
 
 logMessage "************************************************************************************************"

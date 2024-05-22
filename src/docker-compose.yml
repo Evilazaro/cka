@@ -1,10 +1,22 @@
-version: '3'
 services:
   eshop-k8s-master:
+    container_name: eshop-k8s-master
     image: ${REGISTRY:-eshop}/eshop-k8s-master:latest
+    privileged: true
     build:
       context: .
       dockerfile: ./docker/master-node/Dockerfile
+    environment:
+      - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
+      - K3S_KUBECONFIG_MODE=644
+    ports:
+      - "6443:6443"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - k8s-images:/var/lib/docker:rw
+      - /lib/modules:/lib/modules:ro
+      - /var/run/docker.sock:/var/run/docker.sock:rw
 
   # eshop-k8s-worker:
   #   image: ${REGISTRY:-eshop}/eshop-k8s-worker:latest
@@ -14,3 +26,5 @@ services:
   #   depends_on:
   #     - eshop-k8s-master
     
+volumes:
+  k8s-images:

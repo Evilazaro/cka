@@ -16,8 +16,8 @@ trap 'handle_error $LINENO' ERR
 
 # Ensure script is run as root
 if [[ $EUID -ne 0 ]]; then
-   log_message "This script must be run as root" 
-   exit 1
+    log_message "This script must be run as root"
+    exit 1
 fi
 
 # Ensure masterNodeName argument is provided
@@ -27,9 +27,19 @@ if [[ -z "$1" ]]; then
 fi
 
 masterNodeName="$1"
+docker="$2"
 
 log_message "Updating package index and upgrading packages..."
-sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update &&
+    sudo apt-get upgrade -y
+
+# Update and install required packages
+sudo apt-get-install -y &&
+    apt-get-install -y apt-transport-https &&
+    apt-get-install -y ca-certificates &&
+    apt-get-install -y software-properties-common &&
+    apt-get-install -y linux-headers-$(uname -r) &&
+    apt-get-install -y build-essential
 
 sudo mkdir -p /etc/apt/keyrings
 
@@ -40,53 +50,61 @@ log_message "Setting up the Docker stable repository..."
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 log_message "Updating package index again and upgrading packages..."
-sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update &&
+    sudo apt-get upgrade -y
 
 log_message "Installing containerd, kubelet, kubeadm, and kubectl..."
-sudo apt-get install -y containerd kubeadm kubelet kubectl
+sudo apt-get install -y &&
+    apt-get install -y containerd &&
+    apt-get install -y kubeadm &&
+    apt-get install -y kubelet &&
+    apt-get install -y kubectl
 
 log_message "Configuring prerequisites for container runtime..."
+
+if [[ "$docker" != "true" ]]; then
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 overlay
 br_netfilter
 EOF
+    sudo modprobe overlay
+    sudo modprobe br_netfilter
 
-sudo modprobe overlay
-sudo modprobe br_netfilter
 
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
 EOF
+fi
 
 log_message "Applying sysctl parameters without reboot..."
 sudo sysctl --system
 
 log_message "Creating default containerd configuration file..."
 sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
+sudo containerd config default | sudo tee /etc/containerd/config.toml >/dev/null
 
 log_message "Modifying containerd configuration to use systemd cgroup..."
 sudo sed -i 's/            SystemdCgroup = false/            SystemdCgroup = true/' /etc/containerd/config.toml
 
-log_message "Restarting containerd..."
-sudo systemctl restart containerd
+if [[ "$docker" != "true" ]]; then
+    log_message "Initializing Kubernetes cluster..."
+    log_message "Restarting containerd..."
+    sudo systemctl restart containerd
 
-log_message "Enabling containerd to start on boot..."
-sudo systemctl enable containerd
+    log_message "Enabling containerd to start on boot..."
+    sudo systemctl enable containerd
 
-log_message "Initializing Kubernetes cluster..."
-sudo kubeadm init --control-plane-endpoint "$masterNodeName.cloudapp.azure.com:6443" --upload-certs 
+    sudo kubeadm init --control-plane-endpoint "$masterNodeName.cloudapp.azure.com:6443" --upload-certs
+    # Uncomment the following lines to configure kubectl for the current user
+    log_message "Configuring kubectl for current user..."
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# Uncomment the following lines to configure kubectl for the current user
-log_message "Configuring kubectl for current user..."
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-# Uncomment the following line to install a CNI plugin (e.g., Weave Net)
-log_message "Installing Weave Net CNI plugin..."
-kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
-
+    # Uncomment the following line to install a CNI plugin (e.g., Weave Net)
+    log_message "Installing Weave Net CNI plugin..."
+    kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+fi
 log_message "Containerd installation and Kubernetes cluster initialization completed successfully!"
