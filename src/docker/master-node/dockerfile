@@ -1,0 +1,14 @@
+FROM ubuntu:latest
+WORKDIR /src
+
+COPY . .
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y sudo
+
+RUN find /src -exec chmod +x {} \;
+RUN ls /src
+RUN sudo /bin/bash -c "/src/kubernetes/createKubernetesCluster.sh"
+
+CMD ["kubeadm init"]
